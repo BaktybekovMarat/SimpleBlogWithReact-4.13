@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import UserInfo from "../components/UserInfo";
 import { useParams } from "react-router-dom";
-import Loader from "../loader/Loader";
-import FavoriteButton from "../buttons/Favorite-userSettingButton";
+import Loader from "../components/Loader";
+import FavoriteButton from "../components/Favorite-userSettingButton";
 export default function Article() {
   const [article, setArticle] = useState(null);
   const { slug } = useParams();

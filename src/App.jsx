@@ -1,8 +1,9 @@
 import "./App.css";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import UserFrame from "./components/UserFrame";
-import ArticlesPages from "./navigation/ArticlesPage";
+import ArticlesPages from "./navigation/ArticlesPages";
 import Article from "./navigation/Article";
+import SignIn from "./components/SignIn";
 import NotFound from "./components/NotFound";
 function ArticlesLayout() {
   return (
@@ -24,6 +25,10 @@ function App() {
           {
             index: true,
             element: <ArticlesPages></ArticlesPages>,
+          },
+          {
+            path: "signin",
+            element: <SignIn></SignIn>,
           },
           {
             path: "article/:slug",

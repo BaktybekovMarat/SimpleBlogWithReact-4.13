@@ -3,7 +3,7 @@ import { useState } from "react";
 export default function FavoriteButton() {
   const [isLoggedIn] = useState(false);
   function favoriteButton() {
-    return <button className="favorite-article">Favorite article</button>;
+    return <button className="favorite-article-btn">Favorite article</button>;
   }
   function userSetting() {
     return (

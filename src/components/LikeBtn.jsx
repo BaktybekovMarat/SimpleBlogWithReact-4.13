@@ -1,5 +1,5 @@
 import { useState } from "react";
-import LikeIcon from "../images/likeIcon.png";
+import like from "../images/like.svg";
 export default function LikeBtn({ favorited, favoritesCount }) {
   const [likesCount, setLikesCount] = useState(favoritesCount);
   const [isLiked, setIsLiked] = useState(favorited);
@@ -12,15 +12,16 @@ export default function LikeBtn({ favorited, favoritesCount }) {
     );
   };
 
-  function foUser() {
+  function forUser() {
     return (
       <>
         <div>
           <button className="like-btn" onClick={handleLike}>
             <img
               className={isLiked ? "red-like" : "green-like"}
-              src={LikeIcon}
-              alt=""
+              src={like}
+              alt="like"
+              title="like icon"
             />
             <span>{likesCount}</span>
           </button>
@@ -34,7 +35,7 @@ export default function LikeBtn({ favorited, favoritesCount }) {
       <>
         <div>
           <div className="like-btn">
-            <img className="green-like" src={LikeIcon} alt="" />
+            <img className="green-like" src={like} alt="like" title="like icon" />
             <span>{likesCount}</span>
           </div>
         </div>
@@ -42,5 +43,5 @@ export default function LikeBtn({ favorited, favoritesCount }) {
     );
   }
 
-  return isLoggedIn ? foUser() : forGuest();
+  return isLoggedIn ? forUser() : forGuest();
 }
