@@ -260,7 +260,15 @@
   background-color: red;
 }
 .pagination-container {
+  font-family: "Source Sans 3", sans-serif;
   display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pagination-info {
+  min-width: 100px;
+  height: 40px;
+  text-align: center;
   justify-content: center;
   align-items: center;
 }
@@ -279,6 +287,19 @@
   border: 1px solid #61bb61;
   background-color: #61bb61;
   color: #ffffff;
+}
+.prev-next-btn {
+  width: 60px;
+  height: 40px;
+  margin-bottom: 25px;
+  color: #ffffff;
+  border: 1px solid #61bb61;
+  border-radius: 10px;
+  background-color: #61bb61;
+}
+.prev-next-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 .article {
   width: auto;

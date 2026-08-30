@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 export default function useArticles(currentPage) {
   const [articles, setArticles] = useState([]);
+  const [articlesCount, setArticlesCount] = useState(0);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -20,6 +21,7 @@ export default function useArticles(currentPage) {
           throw new Error(`HTTP error: ${response.status}`);
         }
         setArticles(data.articles);
+        setArticlesCount(data.articlesCount);
       } catch (error) {
         setError("Error happened! Cant download data!");
         console.log(error);
@@ -27,11 +29,14 @@ export default function useArticles(currentPage) {
         setLoading(false);
       }
     }
-    
+
     loadData();
   }, [currentPage]);
 
+  
+
   return {
+    articlesCount,
     articles,
     loading,
     error,

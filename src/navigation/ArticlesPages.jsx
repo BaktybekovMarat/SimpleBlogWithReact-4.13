@@ -9,9 +9,9 @@ import { useState } from "react";
 
 export default function ArticlePages() {
   const [currentPage, setCurrentPage] = useState(1);
-  const { articles, loading, error } = useArticles(currentPage);
+  const { articlesCount, articles, loading, error } = useArticles(currentPage);
 
-  if (loading) {
+  if (loading && articles.length === 0) {
     return (
       <div>
         <h2 className="loader-text">Loading...</h2>
@@ -21,7 +21,20 @@ export default function ArticlePages() {
   }
 
   if (error) {
-    return <p style={{ color: "red", fontSize: "10px" }}>{error}</p>;
+    return (
+      <p
+        style={{
+          fontSize: "40px",
+          height: "80vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          color: "red",
+        }}
+      >
+        {error}
+      </p>
+    );
   }
 
   return (
@@ -68,6 +81,7 @@ export default function ArticlePages() {
         <Pagination
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
+          articlesCount={articlesCount}
         ></Pagination>
       </div>
     </div>

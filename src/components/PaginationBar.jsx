@@ -1,56 +1,42 @@
-export default function Pagination({ currentPage, setCurrentPage }) {
+export default function Pagination({
+  currentPage,
+  setCurrentPage,
+  articlesCount,
+}) {
+  const limitArticles = 4;
+  const totalPages = Math.ceil(articlesCount / limitArticles);
+
+  const prev = () => {
+    setCurrentPage(currentPage - 1);
+  };
+  const next = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
   return (
     <div>
       <div className="pagination-container">
         <button
-          className={
-            currentPage === 1 ? "pagination-btn-active" : "pagination-btn"
-          }
-          onClick={() => setCurrentPage(1)}
+          className="prev-next-btn"
+          disabled={currentPage === 1}
+          onClick={prev}
         >
-          1
+          Prev
         </button>
+        <span className=" pagination-info">
+          Page:
+          {currentPage} 
+          of
+          {totalPages}
+        </span>
         <button
-          className={
-            currentPage === 2 ? "pagination-btn-active" : "pagination-btn"
-          }
-          onClick={() => setCurrentPage(2)}
+          className="prev-next-btn"
+          disabled={currentPage === totalPages}
+          onClick={next}
         >
-          2
-        </button>
-        <button
-          className={
-            currentPage === 3 ? "pagination-btn-active" : "pagination-btn"
-          }
-          onClick={() => setCurrentPage(3)}
-        >
-          3
-        </button>
-        <button
-          className={
-            currentPage === 4 ? "pagination-btn-active" : "pagination-btn"
-          }
-          onClick={() => setCurrentPage(4)}
-        >
-          4
-        </button>
-        <button
-          className={
-            currentPage === 5 ? "pagination-btn-active" : "pagination-btn"
-          }
-          onClick={() => setCurrentPage(5)}
-        >
-          5
-        </button>
-        <button
-          className={
-            currentPage === 6 ? "pagination-btn-active" : "pagination-btn"
-          }
-          onClick={() => setCurrentPage(6)}
-        >
-          6
+          Next
         </button>
       </div>
     </div>
   );
-}
+} 
