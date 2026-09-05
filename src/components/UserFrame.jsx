@@ -1,4 +1,4 @@
-import newPost from "../images/newPost.svg";
+import newpost from "../images/new-post.svg";
 import settings from "../images/settings.svg";
 import userIcon from "../images/userIcon.svg";
 import { Link } from "react-router-dom";
@@ -32,7 +32,7 @@ export default function UserFrame({ isLoggedIn, currentUser }) {
           </Link>
 
           <Link className="link" to="/new-post">
-            <img className="header-img" src={newPost} alt="new post" title="new post icon" />
+            <img className="header-img" src={newpost} alt="new post" title="new post icon" />
             <span className="header-items sing-in">New Post</span>
           </Link>
 
