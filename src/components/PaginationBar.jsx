@@ -1,3 +1,5 @@
+import Button from "./Buttons";
+
 export default function Pagination({
   currentPage,
   setCurrentPage,
@@ -16,26 +18,26 @@ export default function Pagination({
   return (
     <div>
       <div className="pagination-container">
-        <button
+        <Button
           className="prev-next-btn"
           disabled={currentPage === 1}
           onClick={prev}
         >
           Prev
-        </button>
+        </Button>
         <span className=" pagination-info">
           Page:
           {currentPage} 
           of
           {totalPages}
         </span>
-        <button
+        <Button
           className="prev-next-btn"
           disabled={currentPage === totalPages}
           onClick={next}
         >
           Next
-        </button>
+        </Button>
       </div>
     </div>
   );

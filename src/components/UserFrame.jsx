@@ -1,22 +1,23 @@
-import { useState } from "react";
-import newpost from "../images/newpost.svg";
-import setting from "../images/setting.svg";
-import user from "../images/user.svg";
+import newPost from "../images/newPost.svg";
+import settings from "../images/settings.svg";
+import userIcon from "../images/userIcon.svg";
 import { Link } from "react-router-dom";
-export default function UserFrame() {
-  const [isLoggedIn] = useState(false);
+
+export default function UserFrame({ isLoggedIn, currentUser }) {
   function signUp() {
     return (
       <div>
-        <div className="navbar">
-          <h3 className="logo">Realworld Blog</h3>
-          <Link to="/">
-            <span className="navbar-items home">Home</span>
+        <div className="header">
+          <h3 className="logo">RealWorld Blog</h3>
+          <Link className="link" to="/">
+            <span className="header-items home">Home</span>
           </Link>
-          <Link to="/signin">
-            <span className="navbar-items sign-in">Sign in</span>
+          <Link className="link" to="/sign-in">
+            <span className="header-items sign-in">Sign in</span>
           </Link>
-          <span className="navbar-items sign-up">Sign Up</span>
+          <Link className="link" to="/sign-up">
+            <span className="header-items sign-up">Sign Up</span>
+          </Link>
         </div>
       </div>
     );
@@ -24,15 +25,38 @@ export default function UserFrame() {
   function signIn() {
     return (
       <div>
-        <div className="navbar">
-          <h3 className="logo">Realworld Blog</h3>
-          <span className="navbar-items home">Home</span>
-          <img className="navbar-img" src={newpost} alt="new post" title="new post icon" />
-          <span className="navbar-items sing-in">New Post</span>
-          <img className="navbar-img" src={setting} alt="setting" title="setting icon" />
-          <span className="navbar-items sign-in">Settings</span>
-          <img className="navbar-img" src={user} alt="user" title="user icon" />
-          <span className="navbar-items sign-up">Profile</span>
+        <div className="header">
+          <h3 className="logo">RealWorld Blog</h3>
+          <Link className="link" to="/">
+            <span className="header-items home">Home</span>
+          </Link>
+
+          <Link className="link" to="/new-post">
+            <img className="header-img" src={newPost} alt="new post" title="new post icon" />
+            <span className="header-items sing-in">New Post</span>
+          </Link>
+
+          <Link className="link" to="/settings">
+            <img
+              className="header-img"
+              src={settings}
+              alt="settings"
+              title="settings icon"
+            />
+            <span className="header-items sign-in">Settings</span>
+          </Link>
+
+          <Link className="link" to="/profile">
+            <img
+              className="header-img"
+              src={userIcon}
+              alt="user"
+              title="user icon"
+            />
+            <span className="header-items sign-up">
+              {currentUser === null ? "Profile" : currentUser.username}
+            </span>
+          </Link>
         </div>
       </div>
     );

@@ -11,17 +11,17 @@ export default function useArticles(currentPage) {
       const limit = 4;
       const offset = (currentPage - 1) * limit;
       try {
-        const response = await fetch(
+        const articlesResponse = await fetch(
           `https://realworld.habsida.net/api/articles?limit=4&offset=${offset}`,
         );
-        const data = await response.json();
-        console.log(data.articles);
+        const articlesData = await articlesResponse.json();
 
-        if (!response.ok) {
-          throw new Error(`HTTP error: ${response.status}`);
+        if (!articlesResponse.ok) {
+          throw new Error(`HTTP error: ${articlesResponse.status}`);
         }
-        setArticles(data.articles);
-        setArticlesCount(data.articlesCount);
+        setArticles(articlesData.articles);
+        console.log(articlesData.articles)
+        setArticlesCount(articlesData.articlesCount);
       } catch (error) {
         setError("Error happened! Cant download data!");
         console.log(error);
@@ -32,8 +32,6 @@ export default function useArticles(currentPage) {
 
     loadData();
   }, [currentPage]);
-
-  
 
   return {
     articlesCount,

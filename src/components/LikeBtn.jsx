@@ -1,9 +1,10 @@
 import { useState } from "react";
 import like from "../images/like.svg";
-export default function LikeBtn({ favorited, favoritesCount }) {
+import favorite from "../images/favorite.svg";
+import Button from "./Buttons";
+export default function LikeBtn({ favoritesCount, isLoggedIn }) {
   const [likesCount, setLikesCount] = useState(favoritesCount);
-  const [isLiked, setIsLiked] = useState(favorited);
-  const [isLoggedIn] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
   const handleLike = () => {
     const nextLike = !isLiked;
     setIsLiked(nextLike);
@@ -14,32 +15,23 @@ export default function LikeBtn({ favorited, favoritesCount }) {
 
   function forUser() {
     return (
-      <>
-        <div>
-          <button className="like-btn" onClick={handleLike}>
-            <img
-              className={isLiked ? "red-like" : "green-like"}
-              src={like}
-              alt="like"
-              title="like icon"
-            />
-            <span>{likesCount}</span>
-          </button>
-        </div>
-      </>
+      <div>
+        <Button className="like-btn" onClick={handleLike}>
+          <img src={isLiked ? favorite : like} alt="like" title="like icon" />
+          <span>{likesCount}</span>
+        </Button>
+      </div>
     );
   }
 
   function forGuest() {
     return (
-      <>
-        <div>
-          <div className="like-btn">
-            <img className="green-like" src={like} alt="like" title="like icon" />
-            <span>{likesCount}</span>
-          </div>
-        </div>
-      </>
+      <div>
+        <Button className="like-btn">
+          <img src={like} alt="like" title="like icon" />
+          <span>{likesCount}</span>
+        </Button>
+      </div>
     );
   }
 

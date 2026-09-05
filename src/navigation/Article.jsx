@@ -1,22 +1,23 @@
 import { useEffect, useState } from "react";
 import UserInfo from "../components/UserInfo";
-import { useParams } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import Loader from "../components/Loader";
-import FavoriteButton from "../components/Favorite-userSettingButton";
+import ArticleActions from "../components/ArticleActions";
 export default function Article() {
+  const {isLoggedIn} = useOutletContext();
   const [article, setArticle] = useState(null);
   const { slug } = useParams();
 
   useEffect(() => {
     async function loadArticle() {
-      const requestArticle = await fetch(
+      const articleResponse = await fetch(
         `https://realworld.habsida.net/api/articles/${slug}`,
       );
-      if (!requestArticle.ok) {
-        throw new Error(`HTTP error: ${requestArticle.status}`);
+      if (!articleResponse.ok) {
+        throw new Error(`HTTP error: ${articleResponse.status}`);
       }
-      const data = await requestArticle.json();
-      setArticle(data.article);
+      const articleData = await articleResponse.json();
+      setArticle(articleData.article);
     }
     loadArticle();
   }, [slug]);
@@ -44,7 +45,7 @@ export default function Article() {
       </div>
       <div className="author-and-favorite-btn">
         <UserInfo author={article.author} createdAt={article.createdAt}>  </UserInfo>
-        <FavoriteButton></FavoriteButton>
+        <ArticleActions isLoggedIn={isLoggedIn}></ArticleActions>
       </div>
       
     </div>

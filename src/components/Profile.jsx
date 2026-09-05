@@ -1,50 +1,19 @@
+import { useOutletContext } from "react-router-dom";
 import UserInfo from "../components/UserInfo";
 import Pagination from "../components/PaginationBar";
 import LikeBtn from "../components/LikeBtn";
 import { Link } from "react-router-dom";
-import useArticles from "./useArticles";
-import Loader from "../components/Loader";
-import Banner from "../components/BannerDefault";
+import useArticles from "../navigation/useArticles";
 import { useState } from "react";
-import { useOutletContext } from "react-router-dom";
-import Loading from "../images/loading.svg";
-
-export default function ArticlePages() {
+import OwnBannerInfo from "./OwnBannerInfo";
+export default function Profile() {
+  const { currentUser, isLoggedIn } = useOutletContext();
   const [currentPage, setCurrentPage] = useState(1);
-  const { articlesCount, articles, loading, error } = useArticles(currentPage);
-  const { isLoggedIn } = useOutletContext();
-
-  if (loading && articles.length === 0) {
-    return (
-      <div>
-        <h2 className="loader-text">
-          <img src={Loading} alt="" />
-        </h2>
-        <Loader></Loader>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <p
-        style={{
-          fontSize: "40px",
-          height: "80vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          color: "red",
-        }}
-      >
-        {error}
-      </p>
-    );
-  }
+  const { articlesCount, articles } = useArticles(currentPage);
 
   return (
-    <div>
-      <Banner></Banner>
+    <>
+      <OwnBannerInfo currentUser={currentUser}></OwnBannerInfo>
       <div className="main-container">
         <div className="main">
           <div className="item1 main-items">
@@ -60,10 +29,10 @@ export default function ArticlePages() {
           {articles.map((article) => (
             <div className="item2 main-items" key={article.slug}>
               <div className="user-like-container">
-                <Link className="link" to={""}><UserInfo
+                <UserInfo
                   author={article.author}
                   createdAt={article.createdAt}
-                ></UserInfo></Link>
+                ></UserInfo>
                 <LikeBtn
                   favoritesCount={article.favoritesCount}
                   isLoggedIn={isLoggedIn}
@@ -89,6 +58,6 @@ export default function ArticlePages() {
           articlesCount={articlesCount}
         ></Pagination>
       </div>
-    </div>
+    </>
   );
 }
