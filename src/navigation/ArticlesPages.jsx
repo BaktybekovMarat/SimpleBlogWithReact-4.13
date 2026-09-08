@@ -12,7 +12,9 @@ import Loading from "../images/loading.svg";
 export default function ArticlePages() {
   const [currentPage, setCurrentPage] = useState(1);
   const { articlesCount, articles, loading, error } = useArticles(currentPage);
-  const { isLoggedIn } = useOutletContext();
+  const { isLoggedIn, limitArticles, currentUser } = useOutletContext();
+
+  
 
   if (loading && articles.length === 0) {
     return (
@@ -60,10 +62,12 @@ export default function ArticlePages() {
           {articles.map((article) => (
             <div className="item2 main-items" key={article.slug}>
               <div className="user-like-container">
-                <Link className="link" to={""}><UserInfo
-                  author={article.author}
-                  createdAt={article.createdAt}
-                ></UserInfo></Link>
+                <Link className="link" to={currentUser?.id === article.id && "/profile"}>
+                  <UserInfo
+                    author={article.author}
+                    createdAt={article.createdAt}
+                  ></UserInfo>
+                </Link>
                 <LikeBtn
                   favoritesCount={article.favoritesCount}
                   isLoggedIn={isLoggedIn}
@@ -87,6 +91,7 @@ export default function ArticlePages() {
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           articlesCount={articlesCount}
+          limitArticles={limitArticles}
         ></Pagination>
       </div>
     </div>

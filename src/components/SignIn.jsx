@@ -14,36 +14,47 @@ export default function SignIn() {
   } = useForm();
 
   const onSubmit = async (user) => {
-    const response = await fetch(
-      "https://realworld.habsida.net/api/users/login",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user: {
-            email: user.email,
-            password: user.password,
+    try {
+      const response = await fetch(
+        "https://realworld.habsida.net/api/users/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-        }),
-      },
-    );
-    const result = await response.json();
-    if (!response.ok) {
-      console.log(response.status);
-      console.log(result.errors);
+          body: JSON.stringify({
+            user: {
+              email: user.email,
+              password: user.password,
+            },
+          }),
+        },
+      );
+      const result = await response.json();
+      if (!response.ok) {
+        const errorMessage =
+          result.errors?.body?.[0] ?? "Something went wrong. Please try again";
+        if (errorMessage.includes("email")) {
+          setError("email", {
+            type: "server",
+            message: "Incorrect email",
+          });
+        } else if (errorMessage.includes("password")) {
+          setError("password", {
+            type: "server",
+            message: "Incorrect password",
+          });
+        }
+        throw new Error("HTTP error:", response.status);
+      }
 
-      setError("root.server", {
-        type: "server",
-        message: "Incorrect email or password",
-      });
-      return;
+      localStorage.setItem("userToken", result.user.token);
+      setIsLoggedIn(true);
+      setCurrentUser(result.user);
+      navigate("/");
+    } catch (error) {
+      console.error(error);
     }
-    localStorage.setItem("userToken", result.user.token);
-    setIsLoggedIn(true);
-    setCurrentUser(result.user);
-    navigate("/");
   };
 
   return (
@@ -52,7 +63,7 @@ export default function SignIn() {
       noValidate
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h1>Sign In</h1>
+      <h1 className="form-title">Sign In</h1>
       {errors.root?.server && (
         <p className="form-errors">{errors.root.server.message}</p>
       )}

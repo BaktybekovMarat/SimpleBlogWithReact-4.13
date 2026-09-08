@@ -1,4 +1,3 @@
-
 import { useOutletContext, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Loader from "./Loader";
@@ -6,7 +5,7 @@ import { useState } from "react";
 import Button from "./Buttons";
 export default function Settings() {
   const { setIsLoggedIn, setCurrentUser, currentUser } = useOutletContext();
-  const [alert, setAlert] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
   const {
     register,
@@ -14,57 +13,68 @@ export default function Settings() {
     setError,
     formState: { errors },
   } = useForm();
-  const onSubmit = async (data) => {
+  const onSubmit = async (formData) => {
     const token = localStorage.getItem("userToken");
     if (!token) {
-      navigate("/");
+      setError("root.server", {
+        type: "auth",
+        message: "Your session has expired. Please sign in again",
+      });
       return;
     }
-    const updatedUser = {
-      username: data.username,
-      email: data.email,
-      bio: data.bio,
-      image: data.image,
-    };
-    if (data.password) {
-      updatedUser.password = data.password;
+    try {
+      const updatedUser = {
+        username: formData.username,
+        email: formData.email,
+        bio: formData.bio,
+        image: formData.image,
+      };
+      if (formData.password) {
+        updatedUser.password = formData.password;
+      }
+      const response = await fetch("https://realworld.habsida.net/api/user", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${token}`,
+        },
+        body: JSON.stringify({
+          user: updatedUser,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const serverMessage = data.errors?.body?.[0] ?? "";
+        if (serverMessage.includes("users.username")) {
+          setError("username", {
+            type: "server",
+            message: "Username is already taken. Please try another username",
+          });
+        } else if (serverMessage.includes("users.email")) {
+          setError("email", {
+            type: "server",
+            message: "Email is already taken. Please try another email",
+          });
+        }
+        console.log("HTTP status", response.status);
+        return;
+      }
+
+      setCurrentUser(data.user);
+      localStorage.setItem("userToken", data.user.token);
+      setSuccessMessage("Settings updated successfully");
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 2000);
+    } catch (error) {
+      console.error("Update settings error:", error);
+      setError("root.server", {
+        type: "server",
+        message: "Update settings failed. Please try again",
+      });
     }
-    const response = await fetch("https://realworld.habsida.net/api/user", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Token ${token}`,
-      },
-      body: JSON.stringify({
-        user: updatedUser,
-      }),
-    });
-    const result = await response.json();
-    if (!response.ok) {
-      const serverMessage = result.errors?.body?.[0] ?? "";
-      if (serverMessage.includes("users.username")) {
-        setError("username", {
-          type: "server",
-          message: "Username is already taken. Please try another username",
-        });
-      } else if (serverMessage.includes("users.email")) {
-        setError("email", {
-          type: "server",
-          message: "Email is already taken. Please try another email",
-        });
-      } else
-        setError("root.server", {
-          type: "server",
-          message: "Registration failed. Try another username or email",
-        });
-      return;
-    }
-    setCurrentUser(result.user);
-    localStorage.setItem("userToken", result.user.token);
-    setAlert("Settings updated successfully");
-    setTimeout(() => {
-      setAlert("");
-    }, 2000);
   };
 
   const handleLogout = () => {
@@ -78,12 +88,12 @@ export default function Settings() {
 
   return (
     <form
-      className="new-post-form"
+      className="new-article-form"
       noValidate
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h1>Your Settings</h1>
-      {alert && <p style={{ color: "green" }}>{alert}</p>}
+      <h1 className="form-title">Your Settings</h1>
+      {successMessage && <p style={{color: "green", fontSize: "20px"}}>{successMessage}</p>}
       {errors.root?.server && (
         <p className="form-errors">{errors.root.server.message}</p>
       )}
@@ -153,10 +163,10 @@ export default function Settings() {
           },
         })}
       ></input>
-      <Button className="default-button" type="submit" >
+      <Button className="default-button" type="submit">
         Update settings
       </Button>
-      <Button className="logout-btn"  onClick={handleLogout}>
+      <Button className="logout-btn" onClick={handleLogout}>
         Or click here to logout
       </Button>
     </form>

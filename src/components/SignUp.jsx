@@ -15,45 +15,49 @@ export default function SignUp() {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const response = await fetch("https://realworld.habsida.net/api/users", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-
-      body: JSON.stringify({
-        user: {
-          username: data.username,
-          email: data.email,
-          password: data.password,
+    try {
+      const response = await fetch("https://realworld.habsida.net/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      }),
-    });
-    const result = await response.json();
-    if (!response.ok) {
-      const serverMessage = result.errors?.body?.[0] ?? "";
-      if (serverMessage.includes("users.username")) {
-        setError("username", {
-          type: "server",
-          message: "Username is already taken. Please try another username",
-        });
-      } else if (serverMessage.includes("users.email")) {
-        setError("email", {
-          type: "server",
-          message: "Email is already taken. Please try another email",
-        });
-      } else
-        setError("root.server", {
-          type: "server",
-          message: "Registration failed. Try another username or email",
-        });
-      return;
-    }
 
-    setIsLoggedIn(true);
-    setCurrentUser(result.user);
-    localStorage.setItem("userToken", result.user.token);
-    navigate("/");
+        body: JSON.stringify({
+          user: {
+            username: data.username,
+            email: data.email,
+            password: data.password,
+          },
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        const serverMessage = result.errors?.body?.[0] ?? "";
+        if (serverMessage.includes("users.username")) {
+          setError("username", {
+            type: "server",
+            message: "Username is already taken. Please try another username",
+          });
+        } else if (serverMessage.includes("users.email")) {
+          setError("email", {
+            type: "server",
+            message: "Email is already taken. Please try another email",
+          });
+        } else
+          setError("root.server", {
+            type: "server",
+            message: "Registration failed. Try another username or email",
+          });
+        throw new Error("HTTP error:", response.status);
+      }
+
+      setIsLoggedIn(true);
+      setCurrentUser(result.user);
+      localStorage.setItem("userToken", result.user.token);
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -62,7 +66,7 @@ export default function SignUp() {
       noValidate
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h1>Sign Up</h1>
+      <h1 className="form-title">Sign Up</h1>
       {errors.root?.server && (
         <p className="form-errors">{errors.root.server.message}</p>
       )}

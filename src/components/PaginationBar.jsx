@@ -4,8 +4,8 @@ export default function Pagination({
   currentPage,
   setCurrentPage,
   articlesCount,
+  limitArticles,
 }) {
-  const limitArticles = 4;
   const totalPages = Math.ceil(articlesCount / limitArticles);
 
   const prev = () => {
@@ -14,6 +14,10 @@ export default function Pagination({
   const next = () => {
     setCurrentPage(currentPage + 1);
   };
+  if (totalPages === 1 || totalPages === null || undefined) {
+    return 1;
+  }
+  console.log("totalPages", totalPages);
 
   return (
     <div>
@@ -27,7 +31,7 @@ export default function Pagination({
         </Button>
         <span className=" pagination-info">
           Page:
-          {currentPage} 
+          {currentPage}
           of
           {totalPages}
         </span>
@@ -41,4 +45,4 @@ export default function Pagination({
       </div>
     </div>
   );
-} 
+}

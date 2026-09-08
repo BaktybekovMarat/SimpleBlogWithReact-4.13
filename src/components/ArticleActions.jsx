@@ -1,16 +1,50 @@
 import Button from "./Buttons";
+import { useNavigate } from "react-router-dom";
+export default function ArticleActions({ article, currentUser }) {
+  const navigate = useNavigate();
+  const handleEdit = () => {
+    navigate(`/articles/${article.slug}/edit`);
+  };
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("do you want to delete this article?");
+    if (confirmDelete) {
+      const response = await fetch(
+        `https://realworld.habsida.net/api/articles/${article.slug}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${localStorage.getItem("userToken")}`,
+          },
+        },
+      );
+      if (!response.ok) {
+        alert("Failed to delete the article. Try again please.");
+        console.error("Failed to delete the article:", response.status);
+        return;
+      } else {
+        alert("Article deleted successfully.");
+        navigate("/");
+      }
+    }
+  };
 
-export default function ArticleActions({ isLoggedIn }) {
   function AddFavoriteArticle() {
     return <Button className="favorite-article-btn">Favorite article</Button>;
   }
   function editOwnArticle() {
     return (
       <>
-        <Button className="edit-btn">Edit</Button>
-        <Button className="delete-btn">Delete</Button>
+        <Button className="edit-btn" onClick={handleEdit}>
+          Edit
+        </Button>
+        <Button className="delete-btn" onClick={handleDelete}>
+          Delete
+        </Button>
       </>
     );
   }
-  return isLoggedIn ? editOwnArticle() : AddFavoriteArticle();
+  const isAuthor = article.author.username === currentUser?.username;
+
+  return isAuthor ? editOwnArticle() : AddFavoriteArticle();
 }

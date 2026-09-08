@@ -31,9 +31,9 @@ export default function UserFrame({ isLoggedIn, currentUser }) {
             <span className="header-items home">Home</span>
           </Link>
 
-          <Link className="link" to="/new-post">
-            <img className="header-img" src={newpost} alt="new post" title="new post icon" />
-            <span className="header-items sing-in">New Post</span>
+          <Link className="link" to="/new-article">
+            <img className="header-img" src={newpost} alt="new article" title="new article icon" />
+            <span className="header-items sing-in">New Article</span>
           </Link>
 
           <Link className="link" to="/settings">
