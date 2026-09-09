@@ -51,7 +51,7 @@ export default function Article() {
         </div>
       </div>
       <div className="description">
-        <p className="article-description">{article.description}</p>
+        <p className="article-description">{article.body}</p>
         <div className="tags">
           {article.tagList.map((tag) => (
             <span key={tag}>{tag}</span>

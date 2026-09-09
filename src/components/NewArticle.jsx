@@ -1,15 +1,16 @@
 import Button from "./Buttons";
 import { useForm } from "react-hook-form";
-
+import { useNavigate } from "react-router-dom";
 
 export default function NewArticle() {
-  
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors },
   } = useForm();
+
+  const navigate = useNavigate();
 
   const onSubmit = async (articleData) => {
     console.log(articleData);
@@ -42,8 +43,13 @@ export default function NewArticle() {
         });
       return;
     }
+    if (result) {
+      navigate(`/article/${result.article.slug}`);
+      setTimeout(() => {
+        window.alert("Article was created successfully✅");
+      }, 500);
+    }
     console.log("Article created successfully:", result.article);
-    
   };
 
   return (
@@ -67,11 +73,15 @@ export default function NewArticle() {
         placeholder="Short description"
         {...register("description", { required: "Description is required" })}
       ></input>
+      {errors.description && (
+        <p className="form-errors">{errors.description.message}</p>
+      )}
       <textarea
         className="input-4-title"
         placeholder="Input your text"
         {...register("body", { required: "Body is required" })}
       ></textarea>
+      {errors.body && <p className="form-errors">{errors.body.message}</p>}
       <div className="tags">
         <span>one</span>
         <span>something</span>

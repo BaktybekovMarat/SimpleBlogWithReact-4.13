@@ -23,7 +23,9 @@ export default function ArticleActions({ article, currentUser }) {
         console.error("Failed to delete the article:", response.status);
         return;
       } else {
-        alert("Article deleted successfully.");
+        setTimeout(() => {
+          window.alert("Article deleted successfully✅");
+        }, 500);
         navigate("/");
       }
     }
