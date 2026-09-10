@@ -1,5 +1,7 @@
 https://baktybekovmarat.github.io/SimpleBlogWithReact-4.13/
 
+link on my vercel repo
+https://simple-blog-with-react-4-13.vercel.app/
 
 # React + Vite
 
