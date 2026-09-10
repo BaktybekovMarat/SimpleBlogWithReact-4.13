@@ -20,7 +20,7 @@ function ArticlesLayout() {
     Boolean(localStorage.getItem("userToken")),
   );
   const limitArticles = 10;
-      
+
   useEffect(() => {
     const token = localStorage.getItem("userToken");
     if (!token) {
@@ -76,75 +76,70 @@ function ArticlesLayout() {
   );
 }
 function App() {
-  const router = createBrowserRouter(
-    [
-      {
-        path: "/",
-        element: <ArticlesLayout></ArticlesLayout>,
-        children: [
-          {
-            index: true,
-            element: <ArticlesPages></ArticlesPages>,
-          },
-          {
-            path: "sign-in",
-            element: <SignIn></SignIn>,
-          },
-          {
-            path: "sign-up",
-            element: <SignUp></SignUp>,
-          },
-          {
-            path: "new-article",
-            element: (
-              <PrivateRoute>
-                <NewArticle></NewArticle>
-              </PrivateRoute>
-            ),
-          },
-          {
-            path: "settings",
-            element: (
-              <PrivateRoute>
-                <Settings></Settings>
-              </PrivateRoute>
-            ),
-          },
-          {
-            path: "profile",
-            element: (
-              <PrivateRoute>
-                <Profile></Profile>
-              </PrivateRoute>
-            ),
-          },
-          {
-            path: "article/:slug",
-            element: (
-              <PrivateRoute>
-                <Article></Article>
-              </PrivateRoute>
-            ),
-          },
-          {
-            path: "articles/:slug/edit",
-            element: (
-              <PrivateRoute>
-                <EditArticle></EditArticle>
-              </PrivateRoute>
-            ),
-          },
-          {
-            path: "*",
-            element: <NotFound></NotFound>,
-          },
-        ],
-      },
-    ],
+  const router = createBrowserRouter([
     {
-      basename: "/SimpleBlogWithReact-4.13",
+      path: "/",
+      element: <ArticlesLayout></ArticlesLayout>,
+      children: [
+        {
+          index: true,
+          element: <ArticlesPages></ArticlesPages>,
+        },
+        {
+          path: "sign-in",
+          element: <SignIn></SignIn>,
+        },
+        {
+          path: "sign-up",
+          element: <SignUp></SignUp>,
+        },
+        {
+          path: "new-article",
+          element: (
+            <PrivateRoute>
+              <NewArticle></NewArticle>
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: "settings",
+          element: (
+            <PrivateRoute>
+              <Settings></Settings>
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: "profile",
+          element: (
+            <PrivateRoute>
+              <Profile></Profile>
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: "article/:slug",
+          element: (
+            <PrivateRoute>
+              <Article></Article>
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: "articles/:slug/edit",
+          element: (
+            <PrivateRoute>
+              <EditArticle></EditArticle>
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: "*",
+          element: <NotFound></NotFound>,
+        },
+      ],
     },
-  );
+  ]);
   return (
     <>
       <RouterProvider router={router} />
