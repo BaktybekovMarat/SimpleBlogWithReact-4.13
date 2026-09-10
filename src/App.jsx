@@ -20,7 +20,7 @@ function ArticlesLayout() {
     Boolean(localStorage.getItem("userToken")),
   );
   const limitArticles = 10;
-
+      
   useEffect(() => {
     const token = localStorage.getItem("userToken");
     if (!token) {
@@ -120,11 +120,19 @@ function App() {
           },
           {
             path: "article/:slug",
-            element: <Article></Article>,
+            element: (
+              <PrivateRoute>
+                <Article></Article>
+              </PrivateRoute>
+            ),
           },
           {
             path: "articles/:slug/edit",
-            element: <EditArticle></EditArticle>,
+            element: (
+              <PrivateRoute>
+                <EditArticle></EditArticle>
+              </PrivateRoute>
+            ),
           },
           {
             path: "*",

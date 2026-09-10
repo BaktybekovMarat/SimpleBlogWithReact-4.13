@@ -11,22 +11,29 @@ export default function Profile() {
   const [myArticles, setMyArticles] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [articlesCount, setArticlesCount] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
   useEffect(() => {
     if (!currentUser) {
       return <Loader></Loader>;
     }
     async function loadArticles() {
-      const response = await fetch(
-        `https://realworld.habsida.net/api/articles?author=${currentUser.username}&limit=${limitArticles}&offset=${(currentPage - 1) * limitArticles}`,
-      );
+      try {
+        setErrorMessage("");
+        const response = await fetch(
+          `https://realworld.habsida.net/api/articles?author=${currentUser.username}&limit=${limitArticles}&offset=${(currentPage - 1) * limitArticles}`,
+        );
 
-      if (!response.ok) {
-        console.log("Error fetching articles:", response.status);
-        throw new Error()
+        if (!response.ok) {
+          console.log("Error fetching articles:", response.status);
+          throw new Error("HTTP error:", response.status);
+        }
+        const data = await response.json();
+        setMyArticles(data.articles);
+        setArticlesCount(data.articlesCount);
+      } catch (error) {
+        console.error(error);
+        setErrorMessage("Cant download your articles. Try again later");
       }
-      const data = await response.json();
-      setMyArticles(data.articles);
-      setArticlesCount(data.articlesCount);
     }
     loadArticles();
   }, [
@@ -36,6 +43,9 @@ export default function Profile() {
     setArticlesCount,
     limitArticles,
   ]);
+  if(errorMessage){
+    return <p className="form-errors">{errorMessage}</p>
+  }
 
   return (
     <>
@@ -67,6 +77,8 @@ export default function Profile() {
                 <LikeBtn
                   favoritesCount={article.favoritesCount}
                   isLoggedIn={isLoggedIn}
+                  slug={article.slug}
+                  favorited={article.favorited}
                 ></LikeBtn>
               </div>
               <div className="main-content">

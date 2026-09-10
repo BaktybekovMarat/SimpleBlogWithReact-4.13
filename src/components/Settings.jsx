@@ -57,11 +57,10 @@ export default function Settings() {
             type: "server",
             message: "Email is already taken. Please try another email",
           });
-        }
-        console.log("HTTP status", response.status);
-        return;
-      }
 
+          throw new Error("HTTP error", response.status);
+        }
+      }
       setCurrentUser(data.user);
       localStorage.setItem("userToken", data.user.token);
       setSuccessMessage("Settings updated successfully");
@@ -76,7 +75,6 @@ export default function Settings() {
       });
     }
   };
-
   const handleLogout = () => {
     localStorage.removeItem("userToken");
     setCurrentUser(null);
@@ -93,7 +91,9 @@ export default function Settings() {
       onSubmit={handleSubmit(onSubmit)}
     >
       <h1 className="form-title">Your Settings</h1>
-      {successMessage && <p style={{color: "green", fontSize: "20px"}}>{successMessage}</p>}
+      {successMessage && (
+        <p style={{ color: "green", fontSize: "20px" }}>{successMessage}</p>
+      )}
       {errors.root?.server && (
         <p className="form-errors">{errors.root.server.message}</p>
       )}
@@ -163,6 +163,9 @@ export default function Settings() {
           },
         })}
       ></input>
+      {errors.password && (
+        <p className="form-errors">{errors.password.message}</p>
+      )}
       <Button className="default-button" type="submit">
         Update settings
       </Button>

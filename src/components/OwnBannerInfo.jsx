@@ -1,6 +1,7 @@
 // import Button from "./Button";
 import DefaultAvatar from "../images/defaultAvatar.png";
 // import like from "../images/like.svg";
+// import Button from "./Buttons";
 
 export default function OwnBannerInfo({ currentUser }) {
   return (

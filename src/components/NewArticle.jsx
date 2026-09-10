@@ -14,42 +14,52 @@ export default function NewArticle() {
 
   const onSubmit = async (articleData) => {
     console.log(articleData);
-    const response = await fetch("https://realworld.habsida.net/api/articles", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Token ${localStorage.getItem("userToken")}`,
-      },
-      body: JSON.stringify({
-        article: {
-          title: articleData.title,
-          description: articleData.description,
-          body: articleData.body,
+    try {
+      const response = await fetch(
+        "https://realworld.habsida.net/api/articles",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${localStorage.getItem("userToken")}`,
+          },
+          body: JSON.stringify({
+            article: {
+              title: articleData.title,
+              description: articleData.description,
+              body: articleData.body,
+            },
+          }),
         },
-      }),
-    });
-    const result = await response.json();
-    if (!response.ok) {
-      const serverMessage = result.errors?.body?.[0] ?? "";
-      if (serverMessage.includes("articles.slug")) {
-        setError("title", {
-          type: "server",
-          message: "Write a unique title .",
-        });
-      } else
-        setError("root.server", {
-          type: "server",
-          message: "Article creation failed. Try another title.",
-        });
-      return;
+      );
+      const result = await response.json();
+      if (!response.ok) {
+        const serverMessage = result.errors?.body?.[0] ?? "";
+        if (serverMessage.includes("articles.slug")) {
+          setError("title", {
+            type: "server",
+            message: "Write a unique title .",
+          });
+        } else
+          setError("root.server", {
+            type: "server",
+            message: "Article creation failed. Try another title.",
+          });
+        return;
+      }
+      if (result) {
+        navigate(`/article/${result.article.slug}`);
+        setTimeout(() => {
+          window.alert("Article was created successfully✅");
+        }, 500);
+      }
+      console.log("Article created successfully:", result.article);
+    } catch (error) {
+      console.error(error);
+      setError(
+        "Unable to complete the request. Please check your connection and try again later.",
+      );
     }
-    if (result) {
-      navigate(`/article/${result.article.slug}`);
-      setTimeout(() => {
-        window.alert("Article was created successfully✅");
-      }, 500);
-    }
-    console.log("Article created successfully:", result.article);
   };
 
   return (

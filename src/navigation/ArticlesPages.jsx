@@ -5,16 +5,17 @@ import { Link } from "react-router-dom";
 import useArticles from "./useArticles";
 import Loader from "../components/Loader";
 import Banner from "../components/BannerDefault";
-import { useState } from "react";
+import {  useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import Loading from "../images/loading.svg";
 
 export default function ArticlePages() {
   const [currentPage, setCurrentPage] = useState(1);
-  const { articlesCount, articles, loading, error } = useArticles(currentPage);
+  const { articlesCount,articles, loading, error } = useArticles(currentPage);
   const { isLoggedIn, limitArticles, currentUser } = useOutletContext();
+ 
 
-  
+ 
 
   if (loading && articles.length === 0) {
     return (
@@ -62,7 +63,10 @@ export default function ArticlePages() {
           {articles.map((article) => (
             <div className="item2 main-items" key={article.slug}>
               <div className="user-like-container">
-                <Link className="link" to={currentUser?.id === article.id && "/profile"}>
+                <Link
+                  className="link"
+                  to={currentUser?.id === article.id && "/profile"}
+                >
                   <UserInfo
                     author={article.author}
                     createdAt={article.createdAt}
@@ -70,7 +74,10 @@ export default function ArticlePages() {
                 </Link>
                 <LikeBtn
                   favoritesCount={article.favoritesCount}
+                  favorited={article.favorited}
                   isLoggedIn={isLoggedIn}
+                  slug={article.slug}
+                  currentUser={currentUser}
                 ></LikeBtn>
               </div>
               <div className="main-content">

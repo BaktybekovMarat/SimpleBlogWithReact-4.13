@@ -6,7 +6,8 @@ export default function Pagination({
   articlesCount,
   limitArticles,
 }) {
-  const totalPages = Math.ceil(articlesCount / limitArticles);
+  const totalPages =
+    articlesCount > 0 ? Math.ceil(articlesCount / limitArticles) : 1;
 
   const prev = () => {
     setCurrentPage(currentPage - 1);
@@ -14,9 +15,7 @@ export default function Pagination({
   const next = () => {
     setCurrentPage(currentPage + 1);
   };
-  if (totalPages === 1 || totalPages === null || undefined) {
-    return 1;
-  }
+
   console.log("totalPages", totalPages);
 
   return (
