@@ -46,7 +46,7 @@ export default function Article() {
     loadArticle();
   }, [slug, navigate, currentUser]);
   if (errorMessage) {
-    return <p className="form-errors">{errorMessage}</p>;
+    return <p className="server-errors">{errorMessage}</p>;
   }
   if (loading) {
     return <Loader></Loader>;

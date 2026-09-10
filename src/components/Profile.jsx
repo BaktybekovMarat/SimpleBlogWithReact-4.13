@@ -12,20 +12,26 @@ export default function Profile() {
   const [currentPage, setCurrentPage] = useState(1);
   const [articlesCount, setArticlesCount] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
+
   useEffect(() => {
     if (!currentUser) {
-      return <Loader></Loader>;
+      return;
     }
     async function loadArticles() {
       try {
         setErrorMessage("");
         const response = await fetch(
           `https://realworld.habsida.net/api/articles?author=${currentUser.username}&limit=${limitArticles}&offset=${(currentPage - 1) * limitArticles}`,
+          {
+            headers: {
+              Authorization: `Token ${localStorage.getItem("userToken")}`,
+            },
+          },
         );
 
         if (!response.ok) {
           console.log("Error fetching articles:", response.status);
-          throw new Error("HTTP error:", response.status);
+          throw new Error(`HTTP error ${response.status}`);
         }
         const data = await response.json();
         setMyArticles(data.articles);
@@ -43,10 +49,10 @@ export default function Profile() {
     setArticlesCount,
     limitArticles,
   ]);
-  if(errorMessage){
-    return <p className="form-errors">{errorMessage}</p>
+  if (errorMessage) {
+    return <p className="server-errors">{errorMessage}</p>;
   }
-
+  if (!myArticles) return <Loader></Loader>;
   return (
     <>
       <OwnBannerInfo currentUser={currentUser}></OwnBannerInfo>
@@ -65,15 +71,10 @@ export default function Profile() {
           {myArticles.map((article) => (
             <div className="item2 main-items" key={article.slug}>
               <div className="user-like-container">
-                <Link
-                  className="link"
-                  to={currentUser.username === article.username && "/profile"}
-                >
-                  <UserInfo
-                    author={article.author}
-                    createdAt={article.createdAt}
-                  ></UserInfo>
-                </Link>
+                <UserInfo
+                  author={article.author}
+                  createdAt={article.createdAt}
+                ></UserInfo>
                 <LikeBtn
                   favoritesCount={article.favoritesCount}
                   isLoggedIn={isLoggedIn}
